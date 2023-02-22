@@ -89,7 +89,7 @@ class AppServiceProvider extends ServiceProvider
             );
         });
 
-        Password::defaults(static fn () => Password::min(6)->letters()->mixedCase()->numbers());
+        Password::defaults(static fn () => Password::min(2)->letters()->mixedCase()->numbers());
     }
 
     /**
