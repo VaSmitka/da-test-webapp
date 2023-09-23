@@ -112,7 +112,7 @@ Deploy do služby Heroku a pak už jen profitovat z výsledku 🎉🎉
         * `FTP_URL` - URL pro přístup k datům na FTP
         * `FTP_PORT` - *nepovinné*, defaultně 21
         * `FTP_ROOT` - *nepovinné*, pokud po připojení je potřeba změnit složku k ukládání
-    1. Vars pro **Dropbox** úložiště, **Pomalé, nouzovka!**
+    1. Vars pro **Dropbox** úložiště, **Pomalé, nouzovka!** 
         * `FILESYSTEM_DRIVER` - `dropbox`
         * `DROPBOX_AUTH_TOKEN` - token pro připojení, lze získat při vytvoření aplikace přes https://www.dropbox.com/developers/apps
 
