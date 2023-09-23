@@ -27,7 +27,7 @@ return [
         'login'         => 'Přihlásit',
         'forget_pass'   => 'Zapomněli jste své heslo?',
 
-        'first_visit'   => 'Jste zde podruhé?',
+        'first_visit'   => 'Jste zde poprvé?',
         'register'      => 'Zaregistrujte se',
     ],
 
