@@ -1,22 +1,14 @@
 <?php
 
 return [
-    'pipeline' => 'datoj23',
-    'app_name_prefix' => 'datoj23',
+    'pipeline' => 'datoj24',
+    'app_name_prefix' => 'datoj24',
 
-    'semester_name' => 'DATOJ23', //
+    'semester_name' => 'DATOJ2', //
 
     'apps' => [
         [
             'name' => '', // empty for lecturer one
-            // 'slug' => '', // keep empty for automation
-            // 'dbName' => '', // keep empty for slug of name
-            'extra-vars' => [
-                // 'NAME' => '', // keep empty for slug of name
-            ],
-        ],
-        [
-            'name' => 'LadyBug', // empty for lecturer one
             // 'slug' => '', // keep empty for automation
             // 'dbName' => '', // keep empty for slug of name
             'extra-vars' => [
