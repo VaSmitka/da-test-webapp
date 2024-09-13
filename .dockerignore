@@ -1,0 +1,57 @@
+### Laravel ###
+bootstrap/compiled.php
+bootstrap/cache/*
+storage/*.key
+vendor
+public/storage
+public/hot
+Homestead.yaml
+Homestead.json
+.env
+.env-file.list
+**/*.log
+composer.phar
+
+resources/views/vendor/mail/html/themes/*
+storage/app/*
+storage/debugbar
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+storage/logs/*
+tests
+
+### OSX ###
+**/.DS_Store
+
+### Bundler ###
+Gemfile.lock
+
+### Node ###
+node_modules
+
+### Bower ###
+bower_components
+
+### Sass ###
+*.sass-cache
+
+### Netbeans ###
+nbproject
+
+### PhpStorm ###
+.idea
+
+### Sublime Text ###
+*.sublime-*
+!*.sublime-project
+
+### Application specific ###
+.heroku_builder
+public/css/*
+public/files/*
+public/fonts
+public/js/*
+public/uploads/*
+public/mix-manifest.json

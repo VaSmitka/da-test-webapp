@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace CzechitasApp\Services;
 
-use DOMDocument;
-use DOMXPath;
 use GuzzleHttp\Client;
+use GuzzleHttp\Utils;
 use Illuminate\Support\Facades\Log;
 
 class AresService
 {
-    public const ARES_ICO_URL = 'https://wwwinfo.mfcr.cz/cgi-bin/ares/darv_std.cgi?ico=%d';
+    public const ARES_ICO_URL = 'https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/%08d';
 
     private Client $client;
-
-    private DOMXPath $finder;
 
     public function __construct(Client $client)
     {
@@ -32,50 +29,29 @@ class AresService
         $data = null;
         try {
             if (!\is_numeric($ico)) {
-                throw new \Exception("ICO is not numeric: ={$ico}=");
+                return $data;
             }
 
-            $domDocument = new DOMDocument();
-            $domDocument->loadXML($this->loadAresData($ico));
-            $this->finder = new DOMXPath($domDocument);
-
-            if ($this->finder->query('//are:Zaznam')->length !== 1) {
-                return null;
-            }
-
-            $street         = $this->getNodeValue('//dtt:Nazev_ulice');
-            $houseNumber    = $this->getNodeValue('//dtt:Cislo_domovni');
-            $zip            = $this->getNodeValue('//dtt:PSC');
-            $city           = $this->getNodeValue('//dtt:Nazev_obce');
+            /** @var object $aresData */
+            $aresData = Utils::jsonDecode(
+                $this->client->get(\sprintf(self::ARES_ICO_URL, (int)$ico))->getBody()->getContents(),
+            );
 
             $data = [
-                'company' => $this->getNodeValue('//are:Obchodni_firma'),
-                'address' => "{$street} {$houseNumber}, {$zip} {$city}",
+                'company' => $aresData->obchodniJmeno,
+                'address' => $aresData->sidlo->textovaAdresa,
             ];
         } catch (\Throwable $e) {
+            if ($e instanceof \GuzzleHttp\Exception\ClientException) {
+                if ($e->getResponse()->getStatusCode() === 404) {
+                    return $data;
+                }
+            }
             Log::warning($e->getMessage(), ['exception' => $e]);
 
             return false;
         }
 
         return $data;
-    }
-
-    public function loadAresData(string $ico): string
-    {
-        return (string)$this->client->get(\sprintf(self::ARES_ICO_URL, $ico))->getBody();
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getNodeValue(string $path)
-    {
-        $nodes = $this->finder->query($path);
-        if ($nodes->length > 0) {
-            return $nodes->item(0)->nodeValue;
-        }
-
-        return null;
     }
 }

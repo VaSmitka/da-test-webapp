@@ -48,9 +48,10 @@ class ExcelExportService
 
     public function sendToBrowser(string $filename = 'export.xlsx'): void
     {
+        $encodedFN = \rawurlencode($filename);
         \header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         \header('Content-Transfer-Encoding: Binary');
-        \header('Content-Disposition: attachment;filename="' . $filename . '"');
+        \header('Content-Disposition: attachment;filename="' . $filename . "\";filename*=UTF-8''" . $encodedFN);
         \header('Cache-Control: max-age=0');
 
         $writer = new Xlsx($this->spreadsheet);
@@ -101,14 +102,14 @@ class ExcelExportService
             } elseif (!empty($student->logged_out)) {
                 $this->setRangeFillColor($sheet, "A{$row}:F{$row}", self::COLOR_LOGGED_OUT);
             } else {
-                $sheet->getCellByColumnAndRow(1, $row)->setValue($row - $startRow + 1);
+                $sheet->getCell([1, $row])->setValue($row - $startRow + 1);
             }
 
-            $sheet->getCellByColumnAndRow(2, $row)->setValue($student->name);
-            $sheet->getCellByColumnAndRow(3, $row)->setValue($student->birthday->format('d.m.Y'));
-            $sheet->getCellByColumnAndRow(4, $row)->setValue($student->email);
-            $sheet->setCellValueByColumnAndRow(5, $row, $student->total_price);
-            $sheet->setCellValueByColumnAndRow(6, $row, $student->total_paid);
+            $sheet->getCell([2, $row])->setValue($student->name);
+            $sheet->getCell([3, $row])->setValue($student->birthday->format('d.m.Y'));
+            $sheet->getCell([4, $row])->setValue($student->email);
+            $sheet->setCellValue([5, $row], $student->total_price);
+            $sheet->setCellValue([6, $row], $student->total_paid);
             $row += 1;
         }
         $sheet->getStyle('A' . ($startRow - 1) . ':F' . ($row - 1))
@@ -148,13 +149,13 @@ class ExcelExportService
                 continue;
             }
 
-            $sheet->getCellByColumnAndRow(2, $row)->setValue($student->name);
-            $sheet->getStyleByColumnAndRow(2, $row)->getFont()->setBold(true);
+            $sheet->getCell([2, $row])->setValue($student->name);
+            $sheet->getStyle([2, $row])->getFont()->setBold(true);
             $row += 1;
             $sheet->mergeCells("{$startCell}{$row}:{$endCell}{$row}");
             $sheet->getStyle("{$startCell}{$row}:{$endCell}{$row}")->getAlignment()->setWrapText(true);
             $sheet->getRowDimension($row)->setRowHeight(\count($notes) * 15);
-            $sheet->getCellByColumnAndRow(2, $row)->setValue(\implode("\n", $notes));
+            $sheet->getCell([2, $row])->setValue(\implode("\n", $notes));
 
             $row += 2;
         }
@@ -203,14 +204,14 @@ class ExcelExportService
                 $this->setRangeFillColor($sheet, "A{$row}:H{$row}", self::COLOR_LOGGED_OUT);
             }
 
-            $sheet->getCellByColumnAndRow(1, $row)->setValue($row - $startRow + 1);
-            $sheet->getCellByColumnAndRow(2, $row)->setValue($student->name);
-            $sheet->getCellByColumnAndRow(3, $row)->setValue($student->term->term_range);
-            $sheet->getCellByColumnAndRow(4, $row)->setValue($student->term->category->name);
-            $sheet->getCellByColumnAndRow(5, $row)->setValue($student->total_price);
-            $sheet->getCellByColumnAndRow(6, $row)->setValue($student->total_paid);
-            $sheet->getCellByColumnAndRow(7, $row)->setValue("=IF(E{$row} > F{$row}, E{$row} - F{$row}, 0)");
-            $sheet->getCellByColumnAndRow(8, $row)->setValue("=IF(E{$row} < F{$row}, F{$row} - E{$row}, 0)");
+            $sheet->getCell([1, $row])->setValue($row - $startRow + 1);
+            $sheet->getCell([2, $row])->setValue($student->name);
+            $sheet->getCell([3, $row])->setValue($student->term->term_range);
+            $sheet->getCell([4, $row])->setValue($student->term->category->name);
+            $sheet->getCell([5, $row])->setValue($student->total_price);
+            $sheet->getCell([6, $row])->setValue($student->total_paid);
+            $sheet->getCell([7, $row])->setValue("=IF(E{$row} > F{$row}, E{$row} - F{$row}, 0)");
+            $sheet->getCell([8, $row])->setValue("=IF(E{$row} < F{$row}, F{$row} - E{$row}, 0)");
 
             $row += 1;
         }

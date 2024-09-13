@@ -26,4 +26,9 @@ return [
      * Url of HSTS pixel to add to HTML, if empty, nothing is added
      */
     'hsts_pixel_url'    => env('HSTS_PIXEL_URL', ''),
+
+    /**
+     * Set to true to act as web is on HTTPS even it is not set in headers nor Forwarded headers
+     */
+    'fake' => env('HTTPS_FAKE', false),
 ];

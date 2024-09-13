@@ -16,7 +16,12 @@ class HttpsMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (\config('https.enable') === true) {
+        // This should work by default via X-Forwarded headers.
+        // But if they are not working, it is possible to fake it via this.
+        if (\config('https.fake') === true) {
+            $request->headers->set('X-FORWARDED-PROTO', 'https');
+            $request->headers->set('X-FORWARDED-PORT', '443');
+        } elseif (\config('https.enable') === true) {
             if (!$request->secure()) {
                 return \redirect()->secure($request->getRequestUri(), 301);
             }

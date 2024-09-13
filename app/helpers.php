@@ -8,7 +8,6 @@ use CzechitasApp\Models\Student;
 use CzechitasApp\Modules\Parsedown\NewLineParsedown;
 use CzechitasApp\Modules\Parsedown\PlaintextParsedown;
 use CzechitasApp\Services\FormatNameService;
-use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\HtmlString;
@@ -359,14 +358,14 @@ function getFontAwesomeFileIconClass(string $filename): string
  * Translate the given message or return default, if not found
  *
  * @param  array<string> $replace
- * @return Translator|string|array<string>|null
+ * @return string|array<string>|null
  */
 function transDef(
     string $key,
     ?string $default = '',
     array $replace = [],
     ?string $locale = null,
-): Translator|string|array|null {
+): string|array|null {
     $translated = trans($key, $replace, $locale);
 
     return $translated === $key ? $default : $translated;

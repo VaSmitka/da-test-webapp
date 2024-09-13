@@ -1,0 +1,50 @@
+# 0. As always, creates onw fork.
+# 1. Rename to be valid YAML file
+# 2. Go to Github Settings -> Developer settings -> Generate new classic token. Add `repo`, `workflow` and `write:packages` scopes.
+# 3. Go to Repo settings and create Repository Secret with GH_PAT name and put generated token.
+# 4. Modify last line starting with `gh workflow run` and put there Pipeline YAML file created in czechitas/terraform repo.
+
+---
+name: Build and publish team Docker image
+on:
+    push:
+        branches:
+            - team/*
+
+concurrency:
+    group: build-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    publish:
+        name: Build and publish team Docker image
+        runs-on: ubuntu-latest
+        permissions:
+            packages: write
+            contents: read
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Login to GitHub Container Registry
+              uses: docker/login-action@v3
+              with:
+                registry: ghcr.io
+                username: ${{ github.actor }}
+                password: ${{ secrets.GH_PAT }}
+
+            - name: Build, Tag and Publish docker image
+              id: push
+              run: |
+                  DOCKER_LABEL=$(echo "${{ github.ref_name }}" | sed -e 's|team/||')
+                  echo "team=$DOCKER_LABEL" >> $GITHUB_OUTPUT
+                  echo "Docker label: $DOCKER_LABEL"
+                  docker build --label="org.opencontainers.image.source=${{ github.event.repository.html_url }}" -t ghcr.io/${{ github.repository }}:${DOCKER_LABEL} .
+                  docker push ghcr.io/${{ github.repository }}:${DOCKER_LABEL}
+            - name: Trigger Deployment pipeline
+              env:
+                GH_TOKEN: ${{ secrets.GH_PAT }}
+              run: |
+                  # Example:
+                  # gh workflow run datoj24_deploy.yaml --repo czechitas/terraform --ref main -f team=${{ steps.push.outputs.team }}
+                  gh workflow run [YOUR_FILE_FROM_TERRAFORM_REPO_HERE] --repo czechitas/terraform --ref main -f team=${{ steps.push.outputs.team }}
