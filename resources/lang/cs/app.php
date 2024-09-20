@@ -54,7 +54,7 @@ return [
 
         'contact'        => 'Kontakt',
 
-        'login'          => 'Přihlášit',
+        'login'          => 'Přihlásit',
         'logged_in'      => 'Přihlášen',
         'profile'        => 'Profil',
         'logout'         => 'Odhlásit',
