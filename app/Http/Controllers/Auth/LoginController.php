@@ -70,13 +70,12 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        return;
-        // if ($user->is_blocked) {
-        //     $this->guard()->logout();
+        if ($user->is_blocked) {
+            $this->guard()->logout();
 
-        //     throw \Illuminate\Validation\ValidationException::withMessages([
-        //         $this->username() => [\trans('auth.is_blocked')],
-        //     ]);
-        // }
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                $this->username() => [\trans('auth.is_blocked')],
+            ]);
+        }
     }
 }
