@@ -35,14 +35,12 @@ class LoginController extends Controller
      */
     public function redirectTo(): string
     {
-        return \route('static.teachers');
+        $user = Auth::user();
+        if ($user->isRoleParent()) {
+            return \route('students.index');
+        }
 
-        // $user = Auth::user();
-        // if ($user->isRoleParent()) {
-        //     return \route('students.index');
-        // }
-
-        // return \route('home');
+        return \route('home');
     }
 
     /**
