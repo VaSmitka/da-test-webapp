@@ -69,8 +69,7 @@ class StudentPolicy
      */
     public function logout(User $user, Student $student): bool
     {
-        return false;
-        // return $user->isAdminOrMore() || ($this->view($user, $student) && $student->isPossibleLogOut());
+        return $user->isAdminOrMore() || ($this->view($user, $student) && $student->isPossibleLogOut());
     }
 
     /**
