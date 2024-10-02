@@ -184,12 +184,6 @@
                             <td>{{ $student->note }}</td>
                         </tr>
                     @endif
-                    @if (!empty($student->private_note))
-                        <tr>
-                            <td>@lang('students.form.note_private'):</td>
-                            <td>{{ $student->private_note }}</td>
-                        </tr>
-                    @endif
                     @canany(['certificateLogin', 'certificatePayment'], $student) <tr>
                             <td>@lang('students.form.certificate')</td>
                             <td>
